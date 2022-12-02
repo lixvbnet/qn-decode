@@ -272,6 +272,22 @@ func isFlac(fp *os.File) (bool, error) {
 
 // Dump  info
 func Dump(filePath string, fileName string, p *cmpb.Progress) ([]byte, error) {
+	// skip if decoded file already exists
+	strIndex := strings.LastIndex(filePath, ".")
+	if strIndex == -1 {
+		return nil, errors.New("file not expected")
+	}
+	decodedFileSuffix := []string{".flac", ".mp3"}
+	for _, suffix := range decodedFileSuffix {
+		decodedFile := filePath[0:strIndex] + suffix
+		exists, err := fileExists(decodedFile)
+		if err == nil && exists {
+			//fmt.Println("[SKIP] File already exists: ", decodedFile)
+			return nil, nil
+		}
+	}
+	//fmt.Println("decoding file", fileName)
+
 	fp, err := os.Open(filePath)
 	if err != nil {
 		fmt.Printf(err.Error())
@@ -308,11 +324,7 @@ func Dump(filePath string, fileName string, p *cmpb.Progress) ([]byte, error) {
 
 		writer.Write(tb) // write to memory
 	}
-	strIndex := strings.LastIndex(filePath, ".")
 
-	if strIndex == -1 {
-		return nil, errors.New("file not expected")
-	}
 	isFlacFormat, err := isFlac(fp)
 	newFile := ""
 	if isFlacFormat {
@@ -327,4 +339,17 @@ func Dump(filePath string, fileName string, p *cmpb.Progress) ([]byte, error) {
 	}
 
 	return nil, nil
+}
+
+func fileExists(filename string) (bool, error) {
+	if _, err := os.Stat(filename); err == nil {
+		// file exists
+		return true, nil
+	} else if errors.Is(err, os.ErrNotExist) {
+		// file does not exist
+		return false, nil
+	} else {
+		// unexpected error
+		return false, err
+	}
 }

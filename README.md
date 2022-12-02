@@ -5,16 +5,11 @@ The repo is used for learning, if there is any infringement, please contact the 
 
 
 ## Installing
-### Homebrew
-```
-$ brew tap luanxuechao/tools
-$ brew install qn-decode
-```
 
 ### GO
 Using `qn-decode` is easy. First, use go get to install the latest version of the library. This command will install the `qn-decode` generator executable along with the library and its dependencies:
 ```
-go get github.com/luanxuechao/qn-decode
+go install github.com/lixvbnet/qn-decode@latest
 ```
 
 ## Usage

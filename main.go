@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/luanxuechao/qn-decode/cmd"
+import "github.com/lixvbnet/qn-decode/cmd"
 
 func main() {
 	cmd.Execute()
